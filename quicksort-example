@@ -1,0 +1,31 @@
+// Main quicksort function with pivot selection strategy
+procedure quicksort(clients, low, high, sort_key, pivot_strategy) is
+    if low < high then
+        pivot_index = select_pivot(clients, low, high, pivot_strategy)
+        pivot_index = partition(clients, low, high, pivot_index, sort_key)
+        quicksort(clients, low, pivot_index - 1, sort_key, pivot_strategy)
+        quicksort(clients, pivot_index + 1, high, sort_key, pivot_strategy)
+
+// Select pivot based on strategy (last, random, or median-of-three)
+function select_pivot(clients, low, high, strategy) is
+    if strategy == "LAST" then
+        return high
+    else if strategy == "RANDOM" then
+        return random(low, high)
+    else if strategy == "MEDIAN_OF_THREE" then
+        mid = (low + high) // 2
+        return median_of(clients[low], clients[mid], clients[high])
+    end if
+
+// Partition using the selected pivot
+function partition(clients, low, high, pivot_index, sort_key) is
+    swap clients[pivot_index] and clients[high]  // Move pivot to end
+    pivot = clients[high]
+    i = low - 1
+
+    for j = low to high - 1 do
+        if compare_dates(clients[j], pivot, sort_key) then
+            i = i + 1
+            swap clients[i] and clients[j]
+    swap clients[i + 1] and clients[high]
+    return i + 1
